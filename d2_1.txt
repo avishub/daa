@@ -1,0 +1,81 @@
+/*Wrie a program to solve optimal storage on tapes using greedy approach.*/
+
+#include<stdio.h>
+#include<stdlib.h>
+
+int *l;
+
+void sortprog(int n)								//selection sorting
+{
+	int i,j,imin,temp;
+	for(i=0;i<n-1;i++)
+	{
+		imin=i;								//contains index of the minimum element
+		for(j=i+1;j<n;j++)
+		{
+			if(l[j]<l[imin])
+				imin=j;
+		}
+		temp=l[i];
+		l[i]=l[imin];
+		l[imin]=temp;
+	}
+}
+
+int main()
+{
+	int i,sum=0,psum=0,*rt;
+	float no,mrt;
+
+	printf("\nEnter the number of programs:\t");
+	scanf("%f",&no);
+
+	l=(int*)malloc(no*sizeof(int));
+	rt=(int*)malloc(no*sizeof(int));
+
+	for(i=0;i<no;i++)
+	{
+		printf("\nEnter the length of program P%d:\t",i);
+		scanf("%d",&l[i]);
+	}
+
+	printf("\n");
+	printf("The length of program is:\n");
+	for(i=0;i<no;i++)
+	{
+		printf("L[%d] = %d\t",i,l[i]);
+	}
+
+	printf("\n");
+
+	sortprog(no);
+
+	printf("\n");
+
+	printf("The sorted program length array is:\n");
+	for(i=0;i<no;i++)
+		printf("%d\t",l[i]);
+	printf("\n");
+	for(i=0;i<no;i++)
+	{
+		psum=psum+l[i];
+		rt[i]=psum;
+	}
+
+	printf("The retrieval time of program is:\n");
+	for(i=0;i<no;i++)
+	{
+		printf("RT[%d] = %d\t",i,rt[i]);
+	}
+	printf("\n");
+	for(i=0;i<no;i++)
+	{
+		sum=sum+rt[i];
+	}
+	printf("%d\n",sum);
+	mrt = sum/no;
+	printf("The mean retrieval time is: %f\n",mrt);
+	printf("\n");
+	return 0;
+}
+

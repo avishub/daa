@@ -1,0 +1,134 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+typedef struct fil
+{
+   char name[21];
+   int len;
+}fil;
+
+void merge(fil A[],int low,int mid,int high)
+{
+  fil left[20],right[20];
+  int i,j,k;
+  int a=mid-low+1;
+  int b=high-mid;
+  for(i=0;i<a;i++)
+  {
+     left[i]=A[low+i];
+  }
+  for(j=0;j<b;j++)
+  {
+     right[j]=A[mid+j+1];
+  }
+  i=j=0;
+  k=low;
+  while(i<a && j<b)
+  {
+     if(left[i].len<=right[j].len)
+     {
+	A[k]=left[i];
+	i++;
+     }
+     else if(left[i].len>right[j].len)
+     {
+	A[k]=right[j];
+	j++;
+     }
+     k++;
+  }
+  while(i<a)
+  {
+	A[k]=left[i];
+	i++;
+	k++;
+  }
+  while(j<b)
+  {
+	A[k]=right[j];
+	j++;
+	k++;	
+  }
+}
+
+void sort(fil A[],int low,int high)
+{
+   if(low<high)
+   {
+      int mid=(low+high)/2;
+      sort(A,low,mid);
+      sort(A,mid+1,high);
+      merge(A,low,mid,high);
+   }
+}
+
+int main()
+{
+  int size[20],i,j,no,tape;
+  fil A[20],B[20][20];
+  int l[2]={0};
+  printf("\nEnter the number of file:\t");
+  scanf("%d",&no);
+  printf("\nEnter the number of tapes:\t");
+  scanf("%d",&tape);
+  for(i=0;i<tape;i++)
+  {
+    printf("\nEnter the size of tape %d:",i+1);
+    scanf("%d",&size[i]);
+  }
+  for(i=0;i<no;i++)
+  {
+    printf("\nEnter the name and size of file %d:\t",i+1);
+    scanf("%s%d",A[i].name,&A[i].len);
+  }
+  printf("The array of unsorted file lengths is:\n");
+  for(i=0;i<no;i++)
+     printf("%s: %d\t",A[i].name,A[i].len);
+  printf("\n");
+  sort(A,0,no-1);
+  printf("The array of sorted file lengths is:\n");
+  for(i=0;i<no;i++)
+     printf("%s: %d\t",A[i].name,A[i].len);
+  printf("\n");
+  for(i=0;i<no;i++)
+  {
+     if(size[i%tape]>=A[i].len)
+     {
+         size[i%tape]=size[i%tape]-A[i].len;
+         B[i%tape][l[i%tape]]=A[i];
+	 l[i%tape]++;
+     }
+     else
+     {
+	printf("\nNo space left");
+	break;
+     }
+  }
+  for(i=0;i<tape;i++)
+  {
+    printf("\nTAPE:%d\t",i+1);
+    for(j=0;j<l[i];j++)
+    {
+	printf("%s ----- %d\t",B[i][j].name,B[i][j].len);
+    }
+    printf("\n remaining size of tapes:%d\n",size[i]);
+  }
+  return 0;
+}
+
+
+/*
+p1 12
+p2 34
+p3 56
+p4 73
+p5 24
+p6 11
+p7 34
+p8 56
+p9 78
+p10 91
+p11 34
+p12 91
+p13 45
+*/
